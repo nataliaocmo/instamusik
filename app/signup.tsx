@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, TouchableW
 import React, { useContext, useState } from 'react'
 import { Link } from 'expo-router'
 import { AuthContext } from '@/context/authContext/AuthContext'
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
 export default function Signup() {
 
@@ -13,7 +13,26 @@ export default function Signup() {
   const [birthdate,setbirth]= React.useState('')
   const [fullname,setname]= React.useState('')
 
-
+    const [date, setDate] = useState<Date>(new Date());
+    const [show, setShow] = useState(false);
+  
+    const onChange = (_: any, selectedDate?: Date) => {
+      const currentDate = selectedDate || date;
+      setShow(Platform.OS === 'ios');
+      setDate(currentDate);
+      
+      // Formatear la fecha como 'dd/mm/yyyy'
+      const formattedDate = formatDate(currentDate);
+      setbirth(formattedDate);
+    };
+  
+    // Función para formatear la fecha como 'dd/mm/yyyy'
+    const formatDate = (date: Date) => {
+      const day = date.getDate().toString().padStart(2, '0'); // Día en formato 'dd'
+      const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Mes en formato 'mm'
+      const year = date.getFullYear(); // Año en formato 'yyyy'
+      return `${day}/${month}/${year}`; // Devolver la fecha formateada
+    };
   
   
   return (
@@ -50,16 +69,18 @@ export default function Signup() {
                 onChangeText={setUser}
                 value={username}
             />
-            <Text>
-              Birthday
-            </Text>
-            <TextInput
-                placeholder='MM/DD/YYYY' // Placeholder indicating the desired date format
-                style={styles.input}
-                placeholderTextColor='grey'
-                keyboardType='numeric' // Numeric keyboard for date input
-                value={birthdate}
-            />
+            <Text>Select birthdate</Text>
+
+                  {show && (
+                    <DateTimePicker
+                      value={date}
+                      mode="date"
+                      display="default"
+                      onChange={onChange}
+                    />
+                  )}
+
+
             <TextInput
                 placeholder='Password'
                 style={styles.input}
@@ -70,7 +91,7 @@ export default function Signup() {
             <Link href={'/(tabs)/home'} asChild>
               <TouchableOpacity
                 style={styles.button}
-                onPress={()=> signUp(email,password,username,fullname,birthdate)}
+                onPress={()=> signUp(email,password,username,fullname, date)}
                 
                 >
                 <Text style={styles.buttonText}>

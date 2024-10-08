@@ -1,49 +1,87 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
-import React, { useContext, useEffect } from 'react';
-import { Link, router } from 'expo-router';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Link, router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { DataContext } from "@/context/dataContext/DataContext"; // Ajusta la ruta
 import { PostProps } from '@/interfaces/postInterface';
+import { newDataProps } from '@/context/dataContext/DataReducer';
+import { AuthContext } from '@/context/authContext/AuthContext';
 
 export default function Profile() {
 
   const { state, getPosts } = useContext(DataContext); // Accedemos a los posts desde el contexto
+  const { stateUser, getUserinfo } = useContext(DataContext); // Accedemos a los posts desde el contexto
+  const { state: { user } } = useContext(AuthContext)
+
+  
+   // Comprobación condicional para asegurar que userState existe antes de acceder a sus propiedades
+   
+
+
+   const profileImage =  require('@/assets/images/noProfilePic.jpg'); // Ajuste dinámico de la imagen según el tema
+
+   
+
+   const [info, setInfo] = useState(undefined as newDataProps | undefined);
+   const name = info?.name ? info?.name.toString() : "";
+   const posts = info?.post ? info.post.toString() : "0";
+   const followers = info?.folowers ? info.folowers.toString() : "0";
+   const following = info?.folowing ? info.folowing.toString() : "0";
+  
 
   useEffect(() => {
     // Llamamos a getPosts para cargar los posts cuando el componente se monta
     getPosts();
   }, []);
 
+   useFocusEffect(
+    useCallback(() => {
+      getUserinfo();
+      
+    }, []) // El array de dependencias vacío asegura que se llame cada vez que la pantalla se enfoca
+  );
+
+
   // Renderiza cada post
   const renderPost = ({ item }: { item: PostProps }) => (
-    <View style={styles.postContainer}>
+    <TouchableOpacity style={styles.postContainer} onPress={() => handlePostPress(item)}>
+      <View style={styles.postContainer}>
       <Image source={{ uri: item.image }} style={styles.postImage} />
     </View>
+    </TouchableOpacity>
+    
   );
+
+  const handlePostPress = (item: PostProps) => {
+    console.log('Post press:');
+    router.push({pathname:"/(tabs)/profile/details/[id]", params:{id:item.id!}})
+    console.log("si entró")
+    // Aquí puedes navegar a la pantalla de detalles del post o realizar otra acción
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.profileHeader}>
         <Image
-          source={require('@/assets/images/noProfilePic.jpg')} // Ensure the path is correct
+          source={{uri: info?.avatar}} // Ensure the path is correct
           style={styles.profilePicture}
         />
         <View style={styles.profileInfo}>
-          <Text style={styles.name}>Profile Name</Text>
-          <Text style={styles.description}>Share what you love.</Text>
+          <Text style={styles.name}>{name}{info?.lastname}</Text>
+          <Text style={styles.description}>{info?.bio}.</Text>
         </View>
       </View>
 
       <View style={styles.statsContainer}>
         <View style={styles.statsBox}>
-          <Text style={styles.statsNumber}>120</Text>
+          <Text style={styles.statsNumber}>{posts}</Text>
           <Text style={styles.statsLabel}>Posts</Text>
         </View>
         <View style={styles.statsBox}>
-          <Text style={styles.statsNumber}>500</Text>
+          <Text style={styles.statsNumber}>{followers}</Text>
           <Text style={styles.statsLabel}>Followers</Text>
         </View>
         <View style={styles.statsBox}>
-          <Text style={styles.statsNumber}>180</Text>
+          <Text style={styles.statsNumber}>{following}</Text>
           <Text style={styles.statsLabel}>Following</Text>
         </View>
       </View>
@@ -152,13 +190,13 @@ const styles = StyleSheet.create({
   },
   postContainer: {
     flex: 1,
-    margin: 5,
+    margin: 1,
     alignItems: 'center',
   },
   postImage: {
     width: '100%', // Ajusta el tamaño de la imagen
     aspectRatio: 1, // Mantiene la proporción cuadrada
-    borderRadius: 10,
+    
   },
   postText: {
     marginTop: 5,

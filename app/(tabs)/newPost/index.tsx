@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView,StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView,StyleSheet, Alert, Button, Modal, ActivityIndicator } from 'react-native'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import React, { useContext, useEffect, useState } from 'react'
 import { TextInput } from 'react-native-paper';
@@ -7,6 +7,7 @@ import ModalCamera from '@/components/ModalCamera';
 import { Image } from 'expo-image';
 import * as Location from 'expo-location';
 import { DataContext } from '@/context/dataContext/DataContext';
+import { DefaultResponse } from '@/interfaces/postInterface';
 
 export default function NewPost() {
 
@@ -57,12 +58,18 @@ export default function NewPost() {
     }
 
     const handleSavePost = async () => {
-        await newPost({
+        // const [isLoading, setIsLoading] = useState(false); // Estado para controlar el popup
+        // setIsLoading(true); // Mostrar el popup cuando comience la petición
+        const response = await newPost({
             address: locationText,
             caption: caption,
             image: currentPhoto.uri,
             date: new Date()
         })
+        if(response){
+            Alert.alert("That post looks good on your feed! Post published correctly")
+        }
+        // setIsLoading(false); // Ocultar el popup cuando la petición termine
         setCaption("");
         setCurrentPhoto(null);
         setLocationText("");
@@ -197,6 +204,30 @@ const styles = StyleSheet.create({
       width: 150,
       height: 30,
   
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semi-transparente
+    },
+    modalContent: {
+        width: 200,
+        padding: 20,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    text: {
+        marginTop: 10,
+        fontSize: 16,
+        fontWeight: 'bold',
     },
   });
   

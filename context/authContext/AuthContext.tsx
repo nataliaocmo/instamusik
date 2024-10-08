@@ -1,6 +1,6 @@
 import { createContext, useEffect, useReducer } from "react";
 import { authReducer, AuthState } from "./AuthReducer";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, User } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/utils/firebaseConfig";
 
@@ -28,11 +28,12 @@ export const AuthProvider = ({ children }: any) => {
 
     const login = async (email: string, password: string) => {
         try {
+
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             const docRef = doc(db, "Users", userCredential.user.uid);
             const docSnap = await getDoc(docRef);
-
+            
             dispatch({ type: "LOGIN", payload: userCredential.user })
             if (docSnap.exists()) {
                 console.log("Document data:", docSnap.data());
@@ -42,18 +43,19 @@ export const AuthProvider = ({ children }: any) => {
 
         
         } catch (error) {
+            console.log("Error logging in:", error);
             throw error;
         }
     };
+    
 
-   
     const signUp = async (email: string, password: string, username: string, fullname: string, birthdate: Date) => {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             const uid= user.uid;
 
-            await setDoc(doc(db, "Users", uid),{
+            await setDoc(doc(db, "Users", user.uid),{
 
                email,
                username,
@@ -62,7 +64,7 @@ export const AuthProvider = ({ children }: any) => {
             
             });
 
-            
+
             dispatch({ type: "LOGIN", payload: { name: user.email } });
         } catch (error) {
             throw error;

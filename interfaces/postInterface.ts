@@ -1,6 +1,7 @@
-import { ReactNode } from "react";
+
 
 export interface PostProps{
+    id?: string,
     address: string,
     caption: string,
     image: string ,
