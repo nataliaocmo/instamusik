@@ -126,6 +126,7 @@ export function DataProvider({ children }: any) {
                 image: urlImage,
                 date: new Date(),
                 postedBy: user.uid,
+                username: stateUser.user.username,
                 likes: 0,
             });
             console.log("Datos del usuario antes de crear el post:", user);

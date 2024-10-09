@@ -66,7 +66,7 @@ export default function Profile() {
 
       <View style={styles.statsContainer}>
         <View style={styles.statsBox}>
-          <Text style={styles.statsNumber}>{posts}</Text>
+          <Text style={styles.statsNumber}>{state.posts.length}</Text>
           <Text style={styles.statsLabel}>Posts</Text>
         </View>
         <View style={styles.statsBox}>

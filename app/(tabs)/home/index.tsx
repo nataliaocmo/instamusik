@@ -1,120 +1,74 @@
-import { View, Text, Button, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native'
-import React, { useCallback, useContext } from 'react'
-import { DataContext } from '@/context/dataContext/DataContext'
-import { useFocusEffect } from 'expo-router';
-import { PostProps } from '@/interfaces/postInterface';
+import React, { useContext, useCallback } from 'react';
+import { View, Text, Image, FlatList, StyleSheet } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
+import { PostProps } from '@/interfaces/postInterface';
+import { DataContext } from '@/context/dataContext/DataContext';
 
 export default function Home() {
-
-  const {state2, getAllPosts}  = useContext(DataContext)
+  const { state2, getAllPosts } = useContext(DataContext);
 
   useFocusEffect(
     useCallback(() => {
-      getAllPosts()
-      
-    }, []) 
+      getAllPosts();
+    }, [])
   );
 
   const renderPost = ({ item }: { item: PostProps }) => (
-      <View style={styles.postContainer}>
-        <Image source={{ uri: item.image }} style={styles.postImage} />
+    <View style={styles.postContainer}>
+      <View style={styles.header}>
+        <Text style={styles.username}>{item.username}</Text>
       </View>
-    
+      <Image source={{ uri: item.image }} style={styles.postImage} />
+      <Text style={styles.caption}>{item.caption}</Text>
+    </View>
   );
 
-  console.log(state2.posts)
   return (
-    <View>
+    <View style={styles.container}>
       <FlatList
-        data={state2.posts} // Usa el estado para obtener los posts
-        renderItem={renderPost} 
-        numColumns={3} // Establece 3 columnas
-        showsVerticalScrollIndicator={false} // Opcional: quita el indicador de scroll
+        data={state2.posts}
+        renderItem={renderPost}
+        numColumns={1} // Set to 1 column to display posts in a vertical list
+        showsVerticalScrollIndicator={false}
       />
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-  },
-  profileHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  buttonBox: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 10,
-  },
-  profilePicture: {
-    width: 100,
-    height: 100,
-    borderRadius: 50, // Hace que la imagen del perfil sea circular
-    marginRight: 20,
-  },
-  profileInfo: {
-    flex: 1,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  description: {
-    fontSize: 16,
-    color: '#888',
-    marginVertical: 5,
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  statsBox: {
-    alignItems: 'center',
-  },
-  statsNumber: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  statsLabel: {
-    fontSize: 14,
-    color: '#888',
-  },
-  button: {
-    backgroundColor: '#f5eeff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    margin: 10,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 10,
-    width: 150,
-    height: 30,
-  },
-  buttonText: {
-    color: 'black',
-    fontSize: 16,
-  },
-  row: {
-    justifyContent: 'space-between',
+    backgroundColor: '#fff',
   },
   postContainer: {
-    flex: 1,
-    margin: 1,
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  header: {
+    flexDirection: 'row',
     alignItems: 'center',
+    padding: 10,
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  username: {
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   postImage: {
-    width: '100%', // Ajusta el tamaño de la imagen
-    aspectRatio: 1, // Mantiene la proporción cuadrada
-    
+    width: '100%',
+    height: 400, // Adjust the height as needed
+    resizeMode: 'cover',
   },
-  postText: {
-    marginTop: 5,
-    textAlign: 'center',
+  caption: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    fontSize: 14,
   },
 });
