@@ -7,8 +7,8 @@ import { DataContext } from "@/context/dataContext/DataContext";
 import { newDataProps } from "@/context/dataContext/DataReducer";
 export default function RootLayout() {
 
-  const [info, setInfo] = useState(undefined as newDataProps | undefined);
-  const username = info?.username ? info.username.toString() : "";
+  const {stateUser} = useContext(DataContext)
+  const username = stateUser?.user.username ? stateUser.user.username.toString() : "";
 
   return (
     <Stack

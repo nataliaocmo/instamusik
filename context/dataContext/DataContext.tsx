@@ -23,7 +23,7 @@ interface DataContextProps {
     newPost: (newPost: PostProps) => Promise<DefaultResponse>
     getPosts: () => void; // Elimina el parámetro de getPosts
     getUserinfo: () => Promise<void>
-    stateUser: AuthState
+    stateUser: any
     updateUser: (updateUser:newDataProps)=>Promise<DefaultResponse>;
     state2: DataState
     getAllPosts: () => Promise<{

@@ -55,12 +55,12 @@ export default function Profile() {
     <View style={styles.container}>
       <View style={styles.profileHeader}>
         <Image
-          source={{uri: info?.avatar}} // Ensure the path is correct
+          source={{uri: stateUser?.user.avatar}} // Ensure the path is correct
           style={styles.profilePicture}
         />
         <View style={styles.profileInfo}>
-          <Text style={styles.name}>{name}{info?.lastname}</Text>
-          <Text style={styles.description}>{info?.bio}.</Text>
+          <Text style={styles.name}>{stateUser.user.name}{stateUser?.user.lastname}</Text>
+          <Text style={styles.description}>{stateUser?.user.bio || "no hay bio"}.</Text>
         </View>
       </View>
 

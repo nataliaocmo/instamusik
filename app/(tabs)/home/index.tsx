@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useContext, useCallback, useEffect } from 'react';
 import { View, Text, Image, FlatList, StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -6,7 +6,11 @@ import { PostProps } from '@/interfaces/postInterface';
 import { DataContext } from '@/context/dataContext/DataContext';
 
 export default function Home() {
-  const { state2, getAllPosts } = useContext(DataContext);
+  const { state2, getAllPosts, getUserinfo } = useContext(DataContext);
+
+  useEffect(()=>{
+    getUserinfo()
+  },[]);
 
   useFocusEffect(
     useCallback(() => {
@@ -18,6 +22,7 @@ export default function Home() {
     <View style={styles.postContainer}>
       <View style={styles.header}>
         <Text style={styles.username}>{item.username}</Text>
+        <Text>{item.address}</Text>
       </View>
       <Image source={{ uri: item.image }} style={styles.postImage} />
       <Text style={styles.caption}>{item.caption}</Text>
