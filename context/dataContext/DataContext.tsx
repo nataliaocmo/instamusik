@@ -25,6 +25,10 @@ interface DataContextProps {
     getUserinfo: () => Promise<void>
     stateUser: AuthState
     updateUser: (updateUser:newDataProps)=>Promise<DefaultResponse>;
+    state2: DataState
+    getAllPosts: () => Promise<{
+        id: string;
+    }[]>
    
 }
 
@@ -87,12 +91,29 @@ export function DataProvider({ children }: any) {
                 ...doc.data(),
             }));
             dispatch({type:"getMyPosts", payload:posts})
-            console.log(posts)
             return posts 
         } catch (error) {
             return []
         }
     }
+
+    const getAllPosts = async () => {
+        try {
+            const postRef = collection(db, "posts");
+            const querySnapshot = await getDocs(postRef);
+      
+            const posts = querySnapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            dispatch2({ type: "getAllPosts", payload: posts });
+            return posts;
+          } catch (error) {
+            console.log(error);
+            return [];
+          }
+    }
+
     
 
 
@@ -165,8 +186,9 @@ export function DataProvider({ children }: any) {
             getPosts,
             getUserinfo,
             stateUser,
-            updateUser
-
+            updateUser,
+            state2,
+            getAllPosts
         }}
     >
         {children}

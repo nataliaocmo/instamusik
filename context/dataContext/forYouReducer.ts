@@ -5,7 +5,7 @@ export interface dataState{
 
 type ActionsProps = {type:"getAllPosts", payload:any}
 
-export const forYouReducer = (state:any, actions:ActionsProps)=> {
+export const forYouReducer = (state:any, actions:any)=> {
     switch(actions.type){
         case "getAllPosts":
             return {

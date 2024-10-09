@@ -19,23 +19,16 @@ export default function Profile() {
 
    const profileImage =  require('@/assets/images/noProfilePic.jpg'); // Ajuste dinámico de la imagen según el tema
 
-   
-
    const [info, setInfo] = useState(undefined as newDataProps | undefined);
    const name = info?.name ? info?.name.toString() : "";
    const posts = info?.post ? info.post.toString() : "0";
    const followers = info?.folowers ? info.folowers.toString() : "0";
    const following = info?.folowing ? info.folowing.toString() : "0";
-  
-
-  useEffect(() => {
-    // Llamamos a getPosts para cargar los posts cuando el componente se monta
-    getPosts();
-  }, []);
 
    useFocusEffect(
     useCallback(() => {
       getUserinfo();
+      getPosts();
       
     }, []) // El array de dependencias vacío asegura que se llame cada vez que la pantalla se enfoca
   );

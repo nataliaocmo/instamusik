@@ -41,7 +41,7 @@ export default function RootLayout() {
           
         }}
       />
-      <Stack.Screen name="Post detail"
+      <Stack.Screen name="details/[id]"
         options={{
           title: "Post detail",
           
